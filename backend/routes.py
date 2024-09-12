@@ -68,6 +68,17 @@ def update_friend(id):
 
             friend.name = data.get("name", friend.name)
             friend.post = data.get("post", friend.post)
+
+            if friend.gender == "male":
+                friend.img_url = (
+                    f"https://avatar.iran.liara.run/public/boy?username={friend.name}"
+                )
+            elif friend.gender == "female":
+                friend.img_url = (
+                    f"https://avatar.iran.liara.run/public/girl?username={friend.name}"
+                )
+            else:
+                friend.img_url = None
             db.session.commit()
             return jsonify(friend.to_json()), 200
     except Exception as e:
