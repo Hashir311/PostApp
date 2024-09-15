@@ -18,8 +18,8 @@ def create_friend():
         data = request.json
         required_fields = ["name", "post", "gender"]
         for field in required_fields:
-            if field not in data:
-                return jsonify({"error": f"missing fields"})
+            if field not in data or not data.get(field):
+                return jsonify({"error": f"missing fields"}), 400
 
         name = data.get("name")
         post = data.get("post")
@@ -34,7 +34,7 @@ def create_friend():
         new_friend = Friend(name=name, post=post, gender=gender, img_url=img_url)
         db.session.add(new_friend)
         db.session.commit()
-        return jsonify({"msg": "friend created "}), 201
+        return jsonify(new_friend.to_json()), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
